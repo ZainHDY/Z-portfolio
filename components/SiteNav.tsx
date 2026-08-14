@@ -57,7 +57,7 @@ export default function SiteNav({
         {isHome ? (
           <nav className="index">
             {links.map((l, i) => (
-              
+              <a
                 key={l.id}
                 href={`#${l.id}`}
                 data-section={l.id}
