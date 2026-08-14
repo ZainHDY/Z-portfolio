@@ -86,7 +86,7 @@ export default async function HomePage() {
           </p>
         )}
         {settings?.resumeFile?.asset && (
-          
+          <a
             className="btn-secondary"
             href={settings.resumeFile.asset.url}
             target="_blank"
