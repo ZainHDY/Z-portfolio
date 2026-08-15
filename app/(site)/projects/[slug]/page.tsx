@@ -40,7 +40,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
         {project.title}
       </h1>
       {project.link && (
-        
+        <a
           className="btn-secondary"
           href={project.link}
           target="_blank"
