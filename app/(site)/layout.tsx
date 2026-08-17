@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   return {
+    metadataBase: new URL(siteUrl),
     title: settings?.name ? `${settings.name} — Portfolio` : 'Portfolio',
     description: settings?.heroLede || '',
   };
@@ -36,4 +38,4 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </body>
     </html>
   );
-}  
+}
