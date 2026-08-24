@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     keywords: project.tags?.join(', '),
   };
 
-  return (
+   return (
     <section>
       <script
         type="application/ld+json"
