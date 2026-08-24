@@ -63,7 +63,7 @@ export default async function HomePage() {
     sameAs: [settings?.linkedin, settings?.github].filter(Boolean),
   };
 
-  return (
+    return (
     <>
       <script
         type="application/ld+json"
