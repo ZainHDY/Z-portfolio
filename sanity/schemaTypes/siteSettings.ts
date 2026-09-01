@@ -1,33 +1,43 @@
 import { defineType, defineField } from 'sanity';
 
+const localizedString = (name: string, title: string) =>
+  defineField({
+    name,
+    title,
+    type: 'localizedText',
+  });
+
+const localizedText = (name: string, title: string, rows = 3) =>
+  defineField({
+    name,
+    title,
+    type: 'object',
+    fields: [
+      { name: 'en', title: 'English', type: 'text', rows },
+      { name: 'ar', title: 'Arabic', type: 'text', rows },
+    ],
+  });
+
 export default defineType({
   name: 'siteSettings',
   title: 'Site Settings',
   type: 'document',
   fields: [
-    defineField({
-      name: 'name',
-      title: 'Your Name',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({ name: 'role', title: 'Tagline / Role', type: 'string' }),
-    defineField({ name: 'heroHeadline', title: 'Hero Headline', type: 'string' }),
-    defineField({
-      name: 'heroAccent',
-      title: 'Hero Accent Word',
-      description:
-        'A word or short phrase inside the headline to highlight in green italics. Must match text in the headline exactly.',
-      type: 'string',
-    }),
-    defineField({ name: 'heroLede', title: 'Hero Subtext', type: 'text', rows: 3 }),
+    localizedString('name', 'Your Name'),
+    localizedString('role', 'Tagline / Role'),
+    localizedString('heroHeadline', 'Hero Headline'),
+    localizedString('heroAccent', 'Hero Accent Word'),
+    localizedText('heroLede', 'Hero Subtext'),
     defineField({
       name: 'aboutBio',
       title: 'About / Bio',
-      type: 'array',
-      of: [{ type: 'block' }],
+      type: 'object',
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{ type: 'block' }] },
+        { name: 'ar', title: 'Arabic', type: 'array', of: [{ type: 'block' }] },
+      ],
     }),
-    defineField({ name: 'resumeIntro', title: 'Resume Intro (optional)', type: 'text', rows: 2 }),
+    localizedText('resumeIntro', 'Resume Intro (optional)', 2),
     defineField({
       name: 'resumeFile',
       title: 'Resume PDF (optional)',
@@ -37,9 +47,9 @@ export default defineType({
     defineField({ name: 'email', title: 'Contact Email', type: 'string' }),
     defineField({ name: 'linkedin', title: 'LinkedIn URL', type: 'url' }),
     defineField({ name: 'github', title: 'GitHub URL (optional)', type: 'url' }),
-    defineField({ name: 'contactHeading', title: 'Contact Heading', type: 'string' }),
-    defineField({ name: 'contactBody', title: 'Contact Body', type: 'text', rows: 2 }),
-    defineField({ name: 'footerWink', title: 'Footer Tagline (optional)', type: 'string' }),
+    localizedString('contactHeading', 'Contact Heading'),
+    localizedText('contactBody', 'Contact Body', 2),
+    localizedString('footerWink', 'Footer Tagline (optional)'),
   ],
-  preview: { select: { title: 'name' } },
+  preview: { select: { title: 'name.en' } },
 });
