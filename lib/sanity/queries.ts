@@ -2,11 +2,8 @@ import { client } from './client';
 
 export type Locale = 'en' | 'ar';
 
-const localized = (field: string, locale: Locale) => `${field}{${locale}}`;
-
 export async function getSiteSettings(locale: Locale = 'en') {
   return client.fetch(`*[_type == "siteSettings"][0]{
-    name->{},
     "name": name.${locale},
     "role": role.${locale},
     "heroHeadline": heroHeadline.${locale},
@@ -23,9 +20,7 @@ export async function getSiteSettings(locale: Locale = 'en') {
 }
 
 export async function getCategories(locale: Locale = 'en') {
-  return client.fetch(
-    `*[_type == "category"] | order(order asc){ "title": title.${locale}, "slug": slug.current }`
-  );
+  return client.fetch(`*[_type == "category"] | order(order asc){ "title": title.${locale}, "slug": slug.current }`);
 }
 
 export async function getProjects(locale: Locale = 'en') {
@@ -34,10 +29,7 @@ export async function getProjects(locale: Locale = 'en') {
       "title": title.${locale},
       "slug": slug.current,
       "summary": summary.${locale},
-      image,
-      link,
-      tags,
-      featured,
+      image, link, tags, featured,
       "category": category->{"title": title.${locale}, "slug": slug.current}
     }
   `);
