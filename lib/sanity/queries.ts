@@ -11,7 +11,8 @@ export async function getSiteSettings(locale: Locale = 'en') {
     "resumeIntro": ${localized('resumeIntro', locale)}, resumeFile{asset->{url}},
     profileImage, "profileImageUrl": profileImage.asset->url,
     brandMark{asset->{url}}, "brandMarkUrl": brandMark.asset->url,
-    email, linkedin, github, "contactHeading": ${localized('contactHeading', locale)},
+    email, linkedin, github, googleScholar,
+    "contactHeading": ${localized('contactHeading', locale)},
     "contactBody": ${localized('contactBody', locale)}, "footerWink": ${localized('footerWink', locale)}
   }`);
 }
