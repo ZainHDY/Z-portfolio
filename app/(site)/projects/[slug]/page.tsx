@@ -42,14 +42,20 @@ export default async function ProjectPage({ params }: { params: { slug: string }
   if (!project) notFound();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const projectUrl = `${siteUrl}/projects/${params.slug}`;
   const creativeWorkLd = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name: project.title,
     description: project.summary,
-    url: `${siteUrl}/projects/${params.slug}`,
+    url: projectUrl,
     image: project.image ? urlFor(project.image).width(1200).height(630).url() : undefined,
     keywords: project.tags?.join(', '),
+    author: {
+      '@type': 'Person',
+      name: 'Zain Hamidy',
+      url: siteUrl,
+    },
   };
 
   return (
