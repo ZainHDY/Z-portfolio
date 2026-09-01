@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 interface Settings { linkedin?: string; email?: string; footerWink?: string; }
-
 type Locale = 'en' | 'ar';
 
 export default function SiteNav({ locale = 'en', name, role, settings }: { locale?: Locale; name?: string; role?: string; settings?: Settings }) {
@@ -26,13 +25,14 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
 
   const ids = ['home', 'about', 'projects', 'resume', 'contact'];
   const switchHref = isHome ? `/${otherLocale}` : pathname.replace(`/${locale}`, `/${otherLocale}`);
+  const switchLanguage = () => { document.cookie = `site-locale=${otherLocale}; path=/; max-age=31536000; SameSite=Lax`; };
 
   return (
     <aside className="rail">
       <div className="rail-top">
         <Link className="mark" href={`/${locale}`}>{name || 'Your Name'}<span>.</span></Link>
         <div className="role">{role}</div>
-        <div className="language-switch"><Link href={switchHref}>{isAr ? 'EN' : 'العربية'}</Link></div>
+        <div className="language-switch"><Link href={switchHref} onClick={switchLanguage}>{isAr ? 'EN' : 'العربية'}</Link></div>
         {isHome ? <nav className="index">{ids.map((id, i) => <a key={id} href={`#${id}`} data-section={id} className={current === id ? 'current' : ''}><span className="tick"></span>{String(i + 1).padStart(2, '0')} · {labels[i]}</a>)}</nav> : <nav className="index"><Link href={`/${locale}#home`}><span className="tick"></span>← {isAr ? 'العودة للرئيسية' : 'Back home'}</Link></nav>}
       </div>
       <div className="rail-bottom">
