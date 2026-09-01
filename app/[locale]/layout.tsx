@@ -13,11 +13,13 @@ export async function generateMetadata({ params }: { params: { locale: Locale } 
   const url = `${siteUrl}/${locale}`;
   const title = settings?.name ? `${settings.name} — ${settings.role || 'Portfolio'}` : 'Portfolio';
   const description = settings?.heroLede || '';
+  const brandMarkUrl = settings?.brandMark?.asset?.url;
   return {
     title, description,
     alternates: { canonical: url, languages: { en: `${siteUrl}/en`, ar: `${siteUrl}/ar` } },
     openGraph: { title, description, url, type: 'website', locale: locale === 'ar' ? 'ar' : 'en_US' },
     twitter: { card: 'summary', title, description },
+    icons: brandMarkUrl ? { icon: brandMarkUrl, shortcut: brandMarkUrl, apple: brandMarkUrl } : undefined,
   };
 }
 
