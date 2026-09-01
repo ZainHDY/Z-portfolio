@@ -1,0 +1,8 @@
+# Zain Hamidy
+
+> Personal portfolio of Zain Hamidy, Marketing Specialist.
+
+## Pages
+
+- [Home](https://zainhdy.me/): Professional profile, about, projects, experience, resume, and contact information.
+- [Data collection systems use in targeted marketing campaigns](https://zainhdy.me/projects/data-collection-systems-use-in-targeted-marketing-campaigns): Project page covering the use of data collection systems in targeted marketing campaigns.
