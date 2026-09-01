@@ -18,14 +18,8 @@ export default function ProjectCard({
     <Link className="card" href={href}>
       {image && (
         <div className="thumb">
-          <Image
-            src={image}
-            alt=""
-            width={900}
-            height={540}
-            style={{ width: '100%', height: 'auto' }}
-          />
-          <span className="thumb-label">Read more</span>
+          <Image src={image} alt="" width={1200} height={720} style={{ width: '100%', height: 'auto' }} />
+          <span className="thumb-label">View project ↗</span>
         </div>
       )}
       <div className="tag">{tag}</div>
