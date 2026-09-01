@@ -9,9 +9,10 @@ export async function getSiteSettings(locale: Locale = 'en') {
     "heroHeadline": ${localized('heroHeadline', locale)}, "heroAccent": ${localized('heroAccent', locale)},
     "heroLede": ${localized('heroLede', locale)}, "aboutBio": ${localized('aboutBio', locale)},
     "resumeIntro": ${localized('resumeIntro', locale)}, resumeFile{asset->{url}},
-    profileImage, brandMark{asset->{url}}, email, linkedin, github,
-    "contactHeading": ${localized('contactHeading', locale)}, "contactBody": ${localized('contactBody', locale)},
-    "footerWink": ${localized('footerWink', locale)}
+    profileImage, "profileImageUrl": profileImage.asset->url,
+    brandMark{asset->{url}}, "brandMarkUrl": brandMark.asset->url,
+    email, linkedin, github, "contactHeading": ${localized('contactHeading', locale)},
+    "contactBody": ${localized('contactBody', locale)}, "footerWink": ${localized('footerWink', locale)}
   }`);
 }
 
