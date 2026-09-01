@@ -2,5 +2,6 @@ import siteSettings from './siteSettings';
 import category from './category';
 import project from './project';
 import experience from './experience';
+import localizedText from './localizedText';
 
-export const schemaTypes = [siteSettings, category, project, experience];
+export const schemaTypes = [siteSettings, category, project, experience, localizedText];
