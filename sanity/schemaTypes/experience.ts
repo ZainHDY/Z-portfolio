@@ -5,42 +5,20 @@ export default defineType({
   title: 'Resume Entry',
   type: 'document',
   fields: [
-    defineField({
-      name: 'role',
-      title: 'Role / Title',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'organization',
-      title: 'Organization',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'startDate',
-      title: 'Start Date',
-      type: 'date',
-      options: { dateFormat: 'MMM YYYY' },
-    }),
+    defineField({ name: 'role', title: 'Role / Title', type: 'localizedText', validation: (Rule) => Rule.required() }),
+    defineField({ name: 'organization', title: 'Organization', type: 'localizedText', validation: (Rule) => Rule.required() }),
+    defineField({ name: 'startDate', title: 'Start Date', type: 'date', options: { dateFormat: 'MMM YYYY' } }),
     defineField({ name: 'current', title: 'Currently here', type: 'boolean', initialValue: false }),
+    defineField({ name: 'endDate', title: 'End Date', type: 'date', options: { dateFormat: 'MMM YYYY' }, hidden: ({ document }) => !!document?.current }),
     defineField({
-      name: 'endDate',
-      title: 'End Date',
-      type: 'date',
-      options: { dateFormat: 'MMM YYYY' },
-      hidden: ({ document }) => !!document?.current,
-    }),
-    defineField({
-      name: 'description',
-      title: 'Description (optional)',
-      type: 'array',
-      of: [{ type: 'block' }],
+      name: 'description', title: 'Description (optional)', type: 'object',
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{ type: 'block' }] },
+        { name: 'ar', title: 'Arabic', type: 'array', of: [{ type: 'block' }] },
+      ],
     }),
     defineField({ name: 'order', title: 'Order', type: 'number', initialValue: 0 }),
   ],
-  orderings: [
-    { title: 'Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] },
-  ],
-  preview: { select: { title: 'role', subtitle: 'organization' } },
+  orderings: [{ title: 'Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
+  preview: { select: { title: 'role.en', subtitle: 'organization.en' } },
 });
