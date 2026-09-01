@@ -4,27 +4,32 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  const [settings, projects] = await Promise.all([getSiteSettings(), getProjects()]);
+  const [enSettings, arSettings, enProjects, arProjects] = await Promise.all([
+    getSiteSettings('en'), getSiteSettings('ar'), getProjects('en'), getProjects('ar'),
+  ]);
 
   const lines = [
     '# Zain Hamidy',
     '',
-    `> ${settings?.role || 'Marketing Specialist'} — personal portfolio of Zain Hamidy.`,
+    `> ${enSettings?.role || 'Marketing Specialist'} — personal portfolio of Zain Hamidy.`,
     '',
-    '## Pages',
+    '## English',
     '',
-    `- [Home](${siteUrl}/): Professional profile, about, projects, experience, resume, and contact information.`,
+    `- [Home](${siteUrl}/en): ${enSettings?.heroLede || 'Professional profile, about, projects, experience, resume, and contact information.'}`,
     '',
-    '## Projects',
+    '### Projects',
     '',
-    ...projects.map((project: any) => {
-      const description = project.summary || `${project.title} project by Zain Hamidy.`;
-      return `- [${project.title}](${siteUrl}/projects/${project.slug}): ${description}`;
-    }),
+    ...enProjects.map((project: any) => `- [${project.title}](${siteUrl}/en/projects/${project.slug}): ${project.summary || `${project.title} project by Zain Hamidy.`}`),
+    '',
+    '## العربية',
+    '',
+    `- [الرئيسية](${siteUrl}/ar): ${arSettings?.heroLede || 'الملف الشخصي والمشاريع والخبرة والسيرة الذاتية ومعلومات التواصل.'}`,
+    '',
+    '### المشاريع',
+    '',
+    ...arProjects.map((project: any) => `- [${project.title}](${siteUrl}/ar/projects/${project.slug}): ${project.summary || `مشروع ${project.title} بواسطة Zain Hamidy.`}`),
     '',
   ];
 
-  return new Response(lines.join('\n'), {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-  });
+  return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }
