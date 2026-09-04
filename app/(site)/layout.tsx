@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getSiteSettings } from '@/lib/sanity/queries';
 import ViewTracker from '@/components/ViewTracker';
+import SiteNav from '@/components/SiteNav';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,10 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSiteSettings('en');
   return (
     <div className="locale-root" lang="en" dir="ltr">
       <ViewTracker />
       <div className="shell">
+        <SiteNav locale="en" name={settings?.name} role={settings?.role} settings={settings} />
         <main>{children}</main>
       </div>
     </div>
