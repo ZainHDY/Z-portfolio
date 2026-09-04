@@ -13,19 +13,41 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
   const [current, setCurrent] = useState('home');
   const isAr = locale === 'ar';
   const otherLocale = isAr ? 'en' : 'ar';
-  const labels = isAr ? ['الرئيسية', 'نبذة', 'المشاريع', 'السيرة الذاتية', 'تواصل'] : ['Home', 'About', 'Projects', 'Resume', 'Contact'];
+  const sections = [
+    { id: 'home', label: isAr ? 'الرئيسية' : 'Home' },
+    { id: 'about', label: isAr ? 'نبذة' : 'About' },
+    { id: 'projects', label: isAr ? 'المشاريع' : 'Projects' },
+    { id: 'resume', label: isAr ? 'الخبرة' : 'Experience' },
+    { id: 'contact', label: isAr ? 'تواصل' : 'Contact' },
+  ];
 
   useEffect(() => {
     if (!isHome) return;
-    const sections = document.querySelectorAll('main section[id]');
-    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) setCurrent(entry.target.id); }), { rootMargin: '-40% 0px -55% 0px' });
-    sections.forEach((s) => observer.observe(s));
+    const elements = sections
+      .map(({ id }) => document.getElementById(id))
+      .filter((element): element is HTMLElement => Boolean(element));
+    if (!elements.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setCurrent(visible.target.id);
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.15, 0.4, 0.7] }
+    );
+    elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, [isHome]);
+  }, [isHome, isAr]);
 
-  const ids = ['home', 'about', 'projects', 'resume', 'contact'];
   const switchHref = isHome ? `/${otherLocale}` : pathname.replace(`/${locale}`, `/${otherLocale}`);
   const switchLanguage = () => { document.cookie = `site-locale=${otherLocale}; path=/; max-age=31536000; SameSite=Lax`; };
+  const handleSectionClick = (id: string) => {
+    setCurrent(id);
+    if (!isHome) return;
+    const element = document.getElementById(id);
+    if (!element) return;
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.history.replaceState(null, '', `#${id}`);
+  };
 
   return (
     <aside className="rail">
@@ -33,7 +55,7 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
         <Link className="mark" href={`/${locale}`}>{name || 'Your Name'}<span>.</span></Link>
         <div className="role">{role}</div>
         <div className="language-switch"><Link href={switchHref} onClick={switchLanguage}>{isAr ? 'EN' : 'العربية'}</Link></div>
-        {isHome ? <nav className="index">{ids.map((id, i) => <a key={id} href={`#${id}`} data-section={id} className={current === id ? 'current' : ''}><span className="tick"></span>{String(i + 1).padStart(2, '0')} · {labels[i]}</a>)}</nav> : <nav className="index"><Link href={`/${locale}#home`}><span className="tick"></span>← {isAr ? 'العودة للرئيسية' : 'Back home'}</Link></nav>}
+        {isHome ? <nav className="index" aria-label={isAr ? 'أقسام الموقع' : 'Site sections'}>{sections.map(({ id, label }, i) => <a key={id} href={`#${id}`} data-section={id} className={current === id ? 'current' : ''} onClick={() => handleSectionClick(id)}><span className="tick"></span>{String(i + 1).padStart(2, '0')} · {label}</a>)}</nav> : <nav className="index"><Link href={`/${locale}#home`}><span className="tick"></span>← {isAr ? 'العودة للرئيسية' : 'Back home'}</Link></nav>}
       </div>
       <div className="rail-bottom">
         <div className="socials" aria-label={isAr ? 'روابط التواصل' : 'Social links'}>
