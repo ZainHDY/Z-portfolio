@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Tajawal } from 'next/font/google';
 import { getSiteSettings, type Locale } from '@/lib/sanity/queries';
 import ViewTracker from '@/components/ViewTracker';
-import SiteNav from '@/components/SiteNav';
 
 const tajawal = Tajawal({ subsets: ['arabic'], weight: ['400','500','700','800'], variable: '--font-arabic' });
 export const dynamic = 'force-dynamic';
@@ -22,5 +21,5 @@ export async function generateMetadata({ params }: { params: { locale: Locale } 
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: Locale } }) {
   const locale = locales.includes(params.locale) ? params.locale : 'en';
   const settings = await getSiteSettings(locale);
-  return <div className={`locale-root ${tajawal.variable}`} lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}><ViewTracker /><div className="shell"><SiteNav locale={locale} name={settings?.name} role={settings?.role} settings={settings} /><main>{children}</main></div></div>;
+  return <div className={`locale-root ${tajawal.variable}`} lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}><ViewTracker /><div className="shell"><main>{children}</main></div></div>;
 }
