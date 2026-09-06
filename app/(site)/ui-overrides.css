@@ -38,10 +38,13 @@ section{scroll-margin-top:24px}
   .error-page-inner{padding:42px 0 52px}
   .error-page-grid,.error-page-grid.has-visual{grid-template-columns:1fr;gap:32px}
   .error-page-eyebrow{margin-bottom:20px}
-  .error-identity{display:flex;align-items:center;gap:18px;margin-bottom:26px;min-height:78px}
-  .error-code{font-size:clamp(76px,20vw,108px);line-height:.72;letter-spacing:-.09em;margin:0;flex:0 0 auto}
-  .error-page-visual-mobile{display:block;width:82px;height:82px;max-width:none;flex:0 0 82px;aspect-ratio:1;justify-self:auto;box-shadow:5px 5px 0 rgba(23,77,56,.08)}
-  .error-page-visual-desktop{display:none}
+
+  /* On phones, the portrait is deliberately part of the 404 lockup — never below it. */
+  .error-identity{display:grid!important;grid-template-columns:minmax(0,1fr) 82px!important;align-items:center!important;column-gap:16px!important;width:max-content!important;max-width:100%!important;min-height:0!important;margin:0 0 28px!important}
+  .error-identity .error-code{grid-column:1!important;grid-row:1!important;align-self:center!important;font-size:clamp(72px,20vw,108px)!important;line-height:.72!important;letter-spacing:-.09em!important;margin:0!important;white-space:nowrap!important}
+  .error-identity .error-page-visual-mobile{grid-column:2!important;grid-row:1!important;display:block!important;width:82px!important;height:82px!important;max-width:82px!important;flex:none!important;aspect-ratio:1!important;justify-self:start!important;align-self:center!important;margin:0!important}
+  .error-identity .error-page-visual-mobile img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+  .error-page-visual-desktop{display:none!important}
   .error-page-copy h1{font-size:clamp(31px,8.7vw,46px);line-height:1.04;letter-spacing:-.025em;margin-bottom:20px}
   .error-page-copy p{font-size:15px;line-height:1.7;margin-bottom:26px;max-width:100%}
   .error-page-actions{gap:9px}
@@ -51,9 +54,9 @@ section{scroll-margin-top:24px}
 @media (max-width:420px){
   .error-page-inner{padding-top:34px;padding-bottom:44px}
   .error-page-grid,.error-page-grid.has-visual{gap:28px}
-  .error-identity{gap:15px;margin-bottom:24px}
-  .error-code{font-size:clamp(68px,20.5vw,94px)}
-  .error-page-visual-mobile{width:72px;height:72px;flex-basis:72px}
+  .error-identity{grid-template-columns:minmax(0,1fr) 72px!important;column-gap:14px!important;margin-bottom:24px!important}
+  .error-identity .error-code{font-size:clamp(68px,20.5vw,94px)!important}
+  .error-identity .error-page-visual-mobile{width:72px!important;height:72px!important;max-width:72px!important}
   .error-page-copy h1{font-size:clamp(29px,8.3vw,38px)}
   .error-page-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
   .error-page-actions a{justify-content:center;text-align:center}
