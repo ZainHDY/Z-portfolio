@@ -2,6 +2,7 @@ import { client } from './client';
 
 export type Locale = 'en' | 'ar';
 const localized = (field: string, locale: Locale) => `${field}.${locale}`;
+const fetchOptions = { cache: 'no-store' as const };
 
 export async function getSiteSettings(locale: Locale = 'en') {
   return client.fetch(`*[_type == "siteSettings"][0]{
@@ -14,30 +15,30 @@ export async function getSiteSettings(locale: Locale = 'en') {
     email, linkedin, github, googleScholar,
     "contactHeading": ${localized('contactHeading', locale)},
     "contactBody": ${localized('contactBody', locale)}, "footerWink": ${localized('footerWink', locale)}
-  }`);
+  }`, {}, fetchOptions);
 }
 
 export async function getCategories(locale: Locale = 'en') {
-  return client.fetch(`*[_type == "category"] | order(order asc){ "title": ${localized('title', locale)}, "slug": slug.current }`);
+  return client.fetch(`*[_type == "category"] | order(order asc){ "title": ${localized('title', locale)}, "slug": slug.current }`, {}, fetchOptions);
 }
 
 export async function getProjects(locale: Locale = 'en') {
   return client.fetch(`*[_type == "project" && draft != true] | order(order asc){
     "title": ${localized('title', locale)}, "slug": slug.current, "summary": ${localized('summary', locale)},
     image, link, tags, featured, "category": category->{"title": ${localized('title', locale)}, "slug": slug.current}
-  }`);
+  }`, {}, fetchOptions);
 }
 
 export async function getProjectBySlug(slug: string, locale: Locale = 'en') {
   return client.fetch(`*[_type == "project" && slug.current == $slug && draft != true][0]{
     "title": ${localized('title', locale)}, "summary": ${localized('summary', locale)}, image, link, tags,
     "body": ${localized('body', locale)}, "category": category->{"title": ${localized('title', locale)}, "slug": slug.current}
-  }`, { slug });
+  }`, { slug }, fetchOptions);
 }
 
 export async function getExperience(locale: Locale = 'en') {
   return client.fetch(`*[_type == "experience"] | order(order asc){
     "role": ${localized('role', locale)}, "organization": ${localized('organization', locale)},
     startDate, endDate, current, "description": ${localized('description', locale)}
-  }`);
+  }`, {}, fetchOptions);
 }
