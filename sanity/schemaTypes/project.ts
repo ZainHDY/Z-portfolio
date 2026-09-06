@@ -31,5 +31,5 @@ export default defineType({
     }),
   ],
   orderings: [{ title: 'Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
-  preview: { select: { title: 'title.en', subtitle: 'category.title', media: 'image' } },
+  preview: { select: { title: 'title.en', subtitle: 'category.title.en', media: 'image' } },
 });
