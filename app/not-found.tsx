@@ -18,22 +18,22 @@ export default async function NotFound() {
   const visualUrl = page?.visual ? urlFor(page.visual).width(900).height(900).fit('crop').url() : undefined;
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: 'clamp(28px, 7vw, 90px)', boxSizing: 'border-box' }}>
-      <section style={{ width: '100%', maxWidth: 980, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: visualUrl ? 'minmax(0, 1.25fr) minmax(220px, .75fr)' : '1fr', gap: 'clamp(32px, 7vw, 90px)', alignItems: 'center' }}>
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 28 }}>{page?.eyebrow || '04 / 04'}</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(72px, 15vw, 150px)', lineHeight: .8, letterSpacing: '-.08em', color: 'var(--forest)', marginBottom: 34 }}>404</div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'clamp(32px, 5vw, 58px)', lineHeight: 1.05, color: 'var(--ink)', maxWidth: 720, margin: '0 0 24px' }}>{page?.headline || 'This page seems to have taken a different route.'}</h1>
-            <p style={{ fontSize: 17, lineHeight: 1.7, color: 'var(--body-text)', maxWidth: 600, margin: '0 0 34px', whiteSpace: 'pre-line' }}>{page?.body || "The address you're looking for doesn't exist — or it has moved somewhere else."}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+    <main className="error-page">
+      <section className="error-page-inner">
+        <div className={`error-page-grid${visualUrl ? ' has-visual' : ''}`}>
+          <div className="error-page-copy">
+            <div className="eyebrow error-page-eyebrow">{page?.eyebrow || '04 / 04'}</div>
+            <div className="error-code" aria-hidden="true">404</div>
+            <h1>{page?.headline || 'This page seems to have taken a different route.'}</h1>
+            <p>{page?.body || "The address you're looking for doesn't exist — or it has moved somewhere else."}</p>
+            <div className="error-page-actions">
               <Link className="btn-primary" href="/en">{page?.homeLabel || 'Back home ↗'}</Link>
               <Link className="btn-secondary" href="/en#projects">{page?.projectsLabel || 'View projects'}</Link>
             </div>
           </div>
           {visualUrl && (
-            <div style={{ aspectRatio: '1', maxWidth: 420, width: '100%', justifySelf: 'end', overflow: 'hidden', borderRadius: 2 }}>
-              <img src={visualUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            <div className="error-page-visual">
+              <img src={visualUrl} alt="" />
             </div>
           )}
         </div>
