@@ -23,38 +23,29 @@ export default async function NotFound({ params }: { params: { locale: string } 
   const visualUrl = page?.visual ? urlFor(page.visual).width(900).height(900).fit('crop').url() : undefined;
 
   const fallback = isAr
-    ? {
-        eyebrow: '04 / 04',
-        headline: 'يبدو أن هذه الصفحة سلكت طريقاً آخر.',
-        body: 'العنوان الذي تبحث عنه غير موجود، أو ربما انتقل إلى مكان آخر.',
-        home: 'العودة للرئيسية ↗',
-        projects: 'عرض المشاريع',
-      }
-    : {
-        eyebrow: '04 / 04',
-        headline: 'This page seems to have taken a different route.',
-        body: "The address you're looking for doesn't exist — or it has moved somewhere else.",
-        home: 'Back home ↗',
-        projects: 'View projects',
-      };
+    ? { eyebrow: '04 / 04', headline: 'يبدو أن هذه الصفحة سلكت طريقاً آخر.', body: 'العنوان الذي تبحث عنه غير موجود، أو ربما انتقل إلى مكان آخر.', home: 'العودة للرئيسية ↗', projects: 'عرض المشاريع' }
+    : { eyebrow: '04 / 04', headline: 'This page seems to have taken a different route.', body: "The address you're looking for doesn't exist — or it has moved somewhere else.", home: 'Back home ↗', projects: 'View projects' };
 
   return (
-    <main dir={isAr ? 'rtl' : 'ltr'} style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: 'clamp(28px, 7vw, 90px)', boxSizing: 'border-box' }}>
-      <section style={{ width: '100%', maxWidth: 980, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: visualUrl ? 'minmax(0, 1.25fr) minmax(220px, .75fr)' : '1fr', gap: 'clamp(32px, 7vw, 90px)', alignItems: 'center' }}>
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 28 }}>{page?.eyebrow || fallback.eyebrow}</div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(72px, 15vw, 150px)', lineHeight: .8, letterSpacing: '-.08em', color: 'var(--forest)', marginBottom: 34 }}>404</div>
-            <h1 style={{ fontFamily: isAr ? 'var(--font-arabic)' : 'var(--font-display)', fontWeight: 500, fontSize: 'clamp(32px, 5vw, 58px)', lineHeight: 1.05, color: 'var(--ink)', maxWidth: 720, margin: '0 0 24px' }}>{page?.headline || fallback.headline}</h1>
-            <p style={{ fontSize: 17, lineHeight: 1.7, color: 'var(--body-text)', maxWidth: 600, margin: '0 0 34px', whiteSpace: 'pre-line' }}>{page?.body || fallback.body}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+    <main className="error-page" dir={isAr ? 'rtl' : 'ltr'}>
+      <section className="error-page-inner">
+        <div className={`error-page-grid${visualUrl ? ' has-visual' : ''}`}>
+          <div className="error-page-copy">
+            <div className="eyebrow error-page-eyebrow">{page?.eyebrow || fallback.eyebrow}</div>
+            <div className="error-identity">
+              <div className="error-code" aria-hidden="true">404</div>
+              {visualUrl && <div className="error-page-visual error-page-visual-mobile"><img src={visualUrl} alt="" /></div>}
+            </div>
+            <h1>{page?.headline || fallback.headline}</h1>
+            <p>{page?.body || fallback.body}</p>
+            <div className="error-page-actions">
               <Link className="btn-primary" href={`/${locale}`}>{page?.homeLabel || fallback.home}</Link>
               <Link className="btn-secondary" href={`/${locale}#projects`}>{page?.projectsLabel || fallback.projects}</Link>
             </div>
           </div>
           {visualUrl && (
-            <div style={{ aspectRatio: '1', maxWidth: 420, width: '100%', justifySelf: 'end', overflow: 'hidden', borderRadius: 2 }}>
-              <img src={visualUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            <div className="error-page-visual error-page-visual-desktop">
+              <img src={visualUrl} alt="" />
             </div>
           )}
         </div>
