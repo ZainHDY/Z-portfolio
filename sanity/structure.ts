@@ -13,4 +13,5 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('category').title('Project Categories'),
       S.documentTypeListItem('project').title('Projects'),
       S.documentTypeListItem('experience').title('Resume / Experience'),
+      S.documentTypeListItem('errorPage').title('Error Page'),
     ]);
