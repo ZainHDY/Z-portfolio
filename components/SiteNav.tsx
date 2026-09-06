@@ -23,19 +23,28 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
 
   useEffect(() => {
     if (!isHome) return;
-    const elements = sections
-      .map(({ id }) => document.getElementById(id))
-      .filter((element): element is HTMLElement => Boolean(element));
-    if (!elements.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setCurrent(visible.target.id);
-      },
-      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.15, 0.4, 0.7] }
-    );
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    const updateCurrent = () => {
+      const elements = sections.map(({ id }) => document.getElementById(id)).filter((el): el is HTMLElement => Boolean(el));
+      if (!elements.length) return;
+      const targetLine = Math.min(window.innerHeight * 0.32, 360);
+      let active = elements[0];
+      let bestDistance = Infinity;
+      for (const element of elements) {
+        const distance = Math.abs(element.getBoundingClientRect().top - targetLine);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          active = element;
+        }
+      }
+      setCurrent(active.id);
+    };
+    updateCurrent();
+    window.addEventListener('scroll', updateCurrent, { passive: true });
+    window.addEventListener('resize', updateCurrent);
+    return () => {
+      window.removeEventListener('scroll', updateCurrent);
+      window.removeEventListener('resize', updateCurrent);
+    };
   }, [isHome, isAr]);
 
   const switchHref = isHome ? `/${otherLocale}` : pathname.replace(`/${locale}`, `/${otherLocale}`);
@@ -45,7 +54,9 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
     if (!isHome) return;
     const element = document.getElementById(id);
     if (!element) return;
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const offset = window.innerWidth <= 820 ? 74 : 24;
+    const top = element.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
     window.history.replaceState(null, '', `#${id}`);
   };
 
@@ -55,13 +66,13 @@ export default function SiteNav({ locale = 'en', name, role, settings }: { local
         <Link className="mark" href={`/${locale}`}>{name || 'Your Name'}<span>.</span></Link>
         <div className="role">{role}</div>
         <div className="language-switch"><Link href={switchHref} onClick={switchLanguage}>{isAr ? 'EN' : 'العربية'}</Link></div>
-        {isHome ? <nav className="index" aria-label={isAr ? 'أقسام الموقع' : 'Site sections'}>{sections.map(({ id, label }, i) => <a key={id} href={`#${id}`} data-section={id} className={current === id ? 'current' : ''} onClick={() => handleSectionClick(id)}><span className="tick"></span>{String(i + 1).padStart(2, '0')} · {label}</a>)}</nav> : <nav className="index"><Link href={`/${locale}#home`}><span className="tick"></span>← {isAr ? 'العودة للرئيسية' : 'Back home'}</Link></nav>}
+        {isHome ? <nav className="index" aria-label={isAr ? 'أقسام الموقع' : 'Site sections'}>{sections.map(({ id, label }, i) => <a key={id} href={`#${id}`} data-section={id} className={current === id ? 'current' : ''} onClick={(event) => { event.preventDefault(); handleSectionClick(id); }}><span className="tick"></span>{String(i + 1).padStart(2, '0')} · {label}</a>)}</nav> : <nav className="index"><Link href={`/${locale}#home`}><span className="tick"></span>← {isAr ? 'العودة للرئيسية' : 'Back home'}</Link></nav>}
       </div>
       <div className="rail-bottom">
         <div className="socials" aria-label={isAr ? 'روابط التواصل' : 'Social links'}>
           {settings?.googleScholar && <a className="social-icon" href={settings.googleScholar} target="_blank" rel="noopener noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 1.8 9 12 15l7.5-4.41V16h2V9L12 3Zm-6.9 8.03V16c0 2.48 3.09 4.5 6.9 4.5s6.9-2.02 6.9-4.5v-4.97L12 15.1l-6.9-4.07Z"/></svg></a>}
-          {settings?.linkedin && <a className="social-icon" href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5H3V21h3.5V8.5ZM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3ZM21 13.85c0-3.75-2-5.5-4.7-5.5-2.17 0-3.14 1.2-3.68 2.05V8.5H9.12V21h3.5v-6.2c0-1.63.3-3.2 2.32-3.2 1.98 0 2 1.86 2 3.3V21H21v-7.15Z"/></svg></a>}
-          {settings?.github && <a className="social-icon" href={settings.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.9.1-.7.3-1.1.6-1.4-2.2-.2-4.5-1.1-4.5-4.8 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.7 9.7 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.7-2.3 4.6-4.5 4.8.3.3.6.9.6 1.8v2.6c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z"/></svg></a>}
+          {settings?.linkedin && <a className="social-icon" href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5H3V21h3.5V8.5ZM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3ZM21 13.85c0-3.75-2-5.5-4.7-5.5-2.17 0-3.14 1.2-3.68 2.05V8.5H9.12V21h3.5v-7.15c0-1.63.3-3.2 2.32-3.2 1.98 0 2 1.86 2 3.3V21H21v-7.15Z"/></svg></a>}
+          {settings?.github && <a className="social-icon" href={settings.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.9.1-.7.3-1.1.6-1.4-2.2-.2-4.5-1.1-4.5-4.8 0-1.1.4-2 1-2.7-.1-.2-.4-1.3-.1-2.7 0 0 .8-.3 2.8 1a9.7 9.7 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.7-2.3 4.6-4.5 4.8.3.3.6.9.6 1.8v2.6c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z"/></svg></a>}
           {settings?.email && <a className="social-icon" href={`mailto:${settings.email}`} aria-label="Email" title="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3V5Zm2 2v.5l7 5 7-5V7l-7 5-7-5Z"/></svg></a>}
         </div>
         {settings?.footerWink && <span className="filed-line">{settings.footerWink}</span>}
